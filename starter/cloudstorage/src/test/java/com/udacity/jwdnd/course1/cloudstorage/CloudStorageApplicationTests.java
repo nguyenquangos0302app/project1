@@ -128,7 +128,7 @@ class CloudStorageApplicationTests {
 	 * If this test is failing, please ensure that you are handling redirecting users 
 	 * back to the login page after a succesful sign up.
 	 * Read more about the requirement in the rubric: 
-	 * https://review.udacity.com/#!/rubrics/2724/view 
+	 * https://review.udacity.com/#!/rubrics/2724/view
 	 */
 	@Test
 	public void testRedirection() {
