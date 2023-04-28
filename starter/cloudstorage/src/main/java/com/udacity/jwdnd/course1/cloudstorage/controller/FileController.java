@@ -6,7 +6,10 @@ import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -26,6 +29,18 @@ public class FileController {
     public String file(Authentication authentication, FileForm fileForm, RedirectAttributes redirectAttributes) throws IOException {
         MultipartFile multipartFile = fileForm.getFile();
         String fileName = multipartFile.getOriginalFilename();
+
+        if (multipartFile.isEmpty()) {
+            redirectAttributes.addFlashAttribute("result", "error");
+            redirectAttributes.addFlashAttribute("message", "Please select file.");
+            return "redirect:/result";
+        }
+
+        if (fileName == null) {
+            redirectAttributes.addFlashAttribute("result", "error");
+            redirectAttributes.addFlashAttribute("message", "Please select file.");
+            return "redirect:/result";
+        }
 
         boolean isDuplicatedFileName = fileService.checkDuplicatedFileName(authentication, fileName);
 
@@ -56,5 +71,13 @@ public class FileController {
     byte[] getFile(Authentication authentication, @PathVariable String fileName) {
         return fileService.findContentFileByAuthenticationAndFileName(authentication, fileName);
     }
+
+//    @ExceptionHandler(MaxUploadSizeExceededException.class)
+//    public String handleError2(MaxUploadSizeExceededException e, RedirectAttributes redirectAttributes) {
+//
+//        redirectAttributes.addFlashAttribute("message", "File size limit exceeded 5MB");
+//        return "redirect:/error";
+//
+//    }
 
 }

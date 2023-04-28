@@ -26,6 +26,12 @@ public class NoteController {
     @PostMapping("")
     public String file(Authentication authentication, NoteForm noteForm, RedirectAttributes redirectAttributes) {
 
+        if (noteForm.getNoteDescription() != null && noteForm.getNoteDescription().length() > 10) {
+            redirectAttributes.addFlashAttribute("error", "Note can't be saved as description exceed 1000 characters");
+            redirectAttributes.addFlashAttribute("status", "500");
+            return "redirect:/error";
+        }
+
         if (Objects.isNull(noteForm.getNoteId())) {
             noteService.save(authentication, noteForm);
         } else {
